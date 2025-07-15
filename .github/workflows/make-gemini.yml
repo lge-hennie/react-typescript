@@ -30,7 +30,7 @@ jobs:
           For example, if the file is components/Login.tsx and the text is 'Click Me!', the key should be 'login.clickMe'. Do not use nested JSON \
           This is running in a GitHub Actions environment, so do not print anything until all processing is complete. \
           Return only the final result in valid JSON format, without any explanations, code snippets, or repeated prompts." \
-          | gemini > raw_output.txt
+          | gemini > src/locales/generated.txt
 
         env:
          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -40,7 +40,7 @@ jobs:
           # Extract JSON block from raw_output.txt and save to generated.json
           datetime=$(date +"%Y%m%d_%H%M%S")
           filename="generated_$datetime.json"
-          cat raw_output.txt | jq '.' > "src/locales/$filename" || echo "{}" > "src/locales/$filename"
+          cat src/locales/generated.txt | jq '.' > "src/locales/$filename" || echo "{}" > "src/locales/$filename"
 
 
       - name: Commit and push changes
