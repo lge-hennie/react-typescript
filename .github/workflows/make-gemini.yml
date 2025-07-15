@@ -47,7 +47,7 @@ jobs:
           echo "$json_block"
   
 
-  # 유효한 JSON인지 확인하고 저장
+          # 유효한 JSON인지 확인하고 저장
           if echo "$json_block" | jq . > "src/locales/$filename"; then
           echo "✅ JSON saved to $filename"
           else
