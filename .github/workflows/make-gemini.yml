@@ -44,9 +44,10 @@ jobs:
           
           # Extract JSON block between ```json and ```
           json_block=$(awk '/^```json/,/^```/' src/locales/generated.txt | sed '1d;$d')
-          cat json_block
-          
-          # 유효한 JSON인지 확인하고 저장
+          echo "$json_block"
+  
+
+  # 유효한 JSON인지 확인하고 저장
           if echo "$json_block" | jq . > "src/locales/$filename"; then
           echo "✅ JSON saved to $filename"
           else
