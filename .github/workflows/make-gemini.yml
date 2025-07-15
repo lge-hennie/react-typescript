@@ -30,19 +30,27 @@ jobs:
           For example, if the file is components/Login.tsx and the text is 'Click Me!', the key should be 'login.clickMe'. Do not use nested JSON \
           This is running in a GitHub Actions environment, so do not print anything until all processing is complete. \
           Return only the final result in valid JSON format, without any explanations, code snippets, or repeated prompts." \
-          Please return only valid JSON without any explanation or formatting.\
-          | gemini > src/locales/generated.json
+          | gemini > src/locales/generated.txt
 
         env:
-         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-#      - name: Extract valid JSON from Gemini output
-#        run: |
-#          # Extract JSON block from raw_output.txt and save to generated.json
-#          datetime=$(date +"%Y%m%d_%H%M%S")
-#          filename="generated_$datetime.json"
-#          cat src/locales/generated.txt | jq '.' > "src/locales/$filename" || echo "{}" > "src/locales/$filename"
-
+      - name: Extract valid JSON from Gemini output
+        run: |
+          # Extract JSON block from raw_output.txt and save to generated.json
+          datetime=$(date +"%Y%m%d_%H%M%S")
+          filename="generated_$datetime.json"
+  
+          # JSON 블록만 추출
+          json_block=$(awk '/^\`\`\`json/,/^\`\`\`/' src/locales/generated.txt | sed '1d;$d')
+    
+          # 유효한 JSON인지 확인하고 저장
+          if echo "$json_block" | jq . > "src/locales/$filename"; then
+          echo "✅ JSON saved to $filename"
+          else
+          echo "{}" > "src/locales/$filename"
+          echo "⚠️ Invalid JSON. Saved empty object."
+          fi
 
       - name: Commit and push changes
         run: |
