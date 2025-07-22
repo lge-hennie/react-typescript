@@ -43,7 +43,7 @@ jobs:
   
           
           # Extract JSON block between ```json and ```
-          json_block=$(awk '/^```json/,/^```/' src/locales/generated.txt | sed '1d;$d')
+          json_block=$(awk '/```json/,/```/' src/locales/generated.txt | sed '1d;$d')
           echo "$json_block"
   
 
