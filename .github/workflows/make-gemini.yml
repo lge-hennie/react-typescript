@@ -41,17 +41,19 @@ jobs:
           datetime=$(date +"%Y%m%d_%H%M%S")
           filename="generated_$datetime.json"
           
-          # Extract JSON block between ```json and ```
-           json_block=$(awk '/```json/{flag=1; next} flag' src/locales/generated.txt)
-          
+           awk '/```json/{f=1;next} /```/{f=0} f' generated.txt > "src/locales/$filename"
 
-          # 유효한 JSON인지 확인하고 저장
-          if echo "$json_block" | jq . > "src/locales/$filename"; then
-          echo "✅ JSON saved to $filename"
-          else
-          echo "{}" > "src/locales/$filename"
-          echo "⚠️ Invalid JSON. Saved empty object."
-          fi
+#          awk '/```json/{f=1;next} /```/{f=0} f' generated.txt | jq . > "src/locales/$filename"
+#          
+
+
+#          # 유효한 JSON인지 확인하고 저장
+#          if echo "$json_block" | jq . > "src/locales/$filename"; then
+#          echo "✅ JSON saved to $filename"
+#          else
+#          echo "{}" > "src/locales/$filename"
+#          echo "⚠️ Invalid JSON. Saved empty object."
+#          fi
 
       - name: Commit and push changes
         run: |
