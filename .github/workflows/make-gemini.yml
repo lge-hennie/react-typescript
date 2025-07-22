@@ -40,10 +40,13 @@ jobs:
           # Extract JSON block from raw_output.txt and save to generated.json
           datetime=$(date +"%Y%m%d_%H%M%S")
           filename="generated_$datetime.json"
-  
           
+          echo "--- Original generated.txt content ---"
+          cat src/locales/generated.txt
+          echo "--------------------------------------"
+
           # Extract JSON block between ```json and ```
-          json_block=$(awk '/```json/,/```/' src/locales/generated.txt | sed '1d;$d')
+          json_block=$(sed '1,/```json/d' src/locales/generated.txt)
           echo "$json_block"
   
 
